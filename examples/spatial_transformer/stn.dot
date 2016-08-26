@@ -1,0 +1,29 @@
+digraph G {
+rankdir=LR;
+input -> x1[label = Pooling2x2Stride2];
+x1 -> x2[label = Conv5x5x20Stride1];
+x2 -> x3[label = ReLU];
+x3 -> x4[label = Pooling2x2Stride2];
+x4 -> x5[label = Conv5x5x20Stride1];
+x5 -> x6[label = ReLU];
+x6 -> x7[label = Conv9x9x50Stride1];
+x7 -> x8[label = ReLU];
+x8 -> aff[label = Conv1x1x6Stride1];
+aff -> grid[label = AffineGridGenerator];
+input -> xST[label = BilinearSampler];
+grid -> xST[label = BilinearSampler];
+xST -> xc0[label = Pooling2x2Stride2];
+xc0 -> xc1[label = Conv7x7x32Stride1];
+xc1 -> xc2[label = ReLU];
+xc2 -> xc3[label = Pooling2x2Stride2];
+xc3 -> xc4[label = Conv5x5x48Stride1];
+xc4 -> xc5[label = ReLU];
+xc5 -> xc6[label = Pooling2x2Stride2];
+xc6 -> xc7[label = Conv4x4x256Stride1];
+xc7 -> xc8[label = ReLU];
+xc8 -> pred[label = Conv1x1x10Stride1];
+pred -> objective[label = Loss];
+label -> objective[label = Loss];
+pred -> error[label = Loss];
+label -> error[label = Loss];
+}

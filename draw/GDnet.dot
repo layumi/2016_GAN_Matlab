@@ -1,0 +1,25 @@
+digraph G {
+rankdir=LR;
+data_rand -> G1[label = Conv3x3x64Stride1];
+G1 -> G1x[label = ReLU];
+G1x -> G2[label = Conv1x1x32Stride1];
+G2 -> G2x[label = ReLU];
+G2x -> G3[label = Conv3x3x1Stride1];
+G3 -> G3x[label = ReLU];
+G3x -> data[label = Concat];
+data_gt -> data[label = Concat];
+data -> D1[label = Conv5x5x20Stride2];
+D1 -> D1x[label = ReLU];
+D1x -> D2[label = Conv5x5x50Stride2];
+D2 -> D2x[label = ReLU];
+D2x -> D3[label = Conv4x4x100Stride1];
+D3 -> D3x[label = ReLU];
+D3x -> D3d[label = DropOut];
+D3d -> prediction[label = Conv1x1x2Stride1];
+prediction -> objective[label = Loss];
+label -> objective[label = Loss];
+prediction -> top1err[label = Loss];
+label -> top1err[label = Loss];
+prediction -> top5err[label = Loss];
+label -> top5err[label = Loss];
+}
