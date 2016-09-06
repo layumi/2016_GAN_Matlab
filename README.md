@@ -1,5 +1,5 @@
 # Generative Adversarial Nets for Matlab
-!{}(https://github.com/layumi/2016_GAN_Matlab/blob/master/show.png)
+![](https://github.com/layumi/2016_GAN_Matlab/blob/master/show.png)
 
 I use feature matching to train Generative model. (I define this Loss in the `/matlab/+dagnn/Feature_Match_Loss.m`)
 
