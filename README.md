@@ -3,9 +3,11 @@
 
 I use feature matching to train Generative model. (I define this Loss in the `/matlab/+dagnn/Feature_Match_Loss.m`)
 
-1.You can test this code by run `test_gan_3.m`  
+1.Compile matconvnet by run `gpu_comilpe.m` which you should remove comment in it.
 
-2.If you wanna train this code, you can run `train_gan_3.m`
+2.You can test this code by run `test_gan_3.m`  
+
+3.If you wanna train this code, you can run `train_gan_3.m`
 You can find the network structure `GDnet_3.m`
 
 
