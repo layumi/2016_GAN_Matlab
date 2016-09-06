@@ -1,4 +1,4 @@
-netStruct = load('./data/GAN/net-epoch-9.mat');
+netStruct = load('./data/GAN/net-epoch-20.mat');
 net = dagnn.DagNN.loadobj(netStruct.net);
 net.mode = 'test';
 net.move('gpu');

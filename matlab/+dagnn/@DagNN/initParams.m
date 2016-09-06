@@ -20,23 +20,28 @@ for l = 1:numel(obj.layers)
         params{1,1} = (rand(h, w, in, out, 'single')*2 - 1)*sc;
         %sc = sqrt(2/(h*w*out)) ;
         %params{1,1}= randn(h, w, in, out, 'single')*sc ;
+        %params{1,1}= (rand(h, w, in, out, 'single')-0.5)*0.08 ;
         params{1,2} = zeros(out, 1, 'single') ;
     elseif(isequal(class(obj.layers(l).block),'dagnn.ConvTranspose'))
         sizet=obj.layers(l).block.size;
         h =sizet(1); w =sizet(2); in = sizet(3); out=sizet(4);
-        %sc = sqrt(3/(h*w*in)) ;
-        %params{1,1} = (rand(h, w, in, out, 'single')*2 - 1)*sc;
-        sc = sqrt(2/(h*w*in)) ;
-        params{1,1}= randn(h, w, in, out, 'single')*sc ;
+        sc = sqrt(3/(h*w*in)) ;
+        params{1,1} = (rand(h, w, in, out, 'single')*2 - 1)*sc;
+        %sc = sqrt(2/(h*w*in)) ;
+        %params{1,1}= randn(h, w, in, out, 'single')*sc ;
         %params{1,1} = bilinear_u(h,in,out);
+        %params{1,1}= (rand(h, w, in, out, 'single')-0.5)*0.08 ;
         params{1,2} = zeros(in, 1, 'single') ;
     elseif(isequal(class(obj.layers(l).block),'dagnn.BatchNorm'))
-        %size=obj.layers(l).block.size;
-        %h =size(1); w =size(2); in = size(3); out=size(4);
-        in = 4096;
-        params{1,1} = ones(in,1, 'single') ;
-        params{1,2} = zeros(in, 1, 'single') ;
-        params{1,3} = zeros(in, 2, 'single') ;
+        s=obj.layers(l-1).block.size;
+        h =s(1); w =s(2); in = s(3); out=s(4);
+        if(isequal(class(obj.layers(l-1).block),'dagnn.Conv'))
+            ss = out;
+        else ss = in;
+        end
+        params{1,1} = ones(ss,1, 'single') ;
+        params{1,2} = zeros(ss, 1, 'single') ;
+        params{1,3} = zeros(ss, 2, 'single') ;
     else
         params = obj.layers(l).block.initParams() ;
     end
@@ -53,11 +58,17 @@ for l = 1:numel(obj.layers)
        continue; 
     end
     [obj.params(p).value] = deal(params{:}) ;
-    if(isequal(class(obj.layers(l).block),'dagnn.Conv'))
-        [obj.params(p(1)).learningRate]=.1;
-        [obj.params(p(2)).learningRate]=2;
+    if(isequal(class(obj.layers(l).block),'dagnn.ConvTranspose'))
+        [obj.params(p(1)).learningRate]=1;
+        [obj.params(p(2)).learningRate]=1;
         [obj.params(p(1)).trainMethod] = 'gradient';
         [obj.params(p(2)).trainMethod] = 'gradient';
+    end
+    if(isequal(class(obj.layers(l).block),'dagnn.Conv'))
+        [obj.params(p(1)).learningRate]=1;
+        [obj.params(p(2)).learningRate]=1;
+        [obj.params(p(1)).trainMethod] = 'rmsprop';
+        [obj.params(p(2)).trainMethod] = 'rmsprop';
         if(~isempty(strfind(obj.layers(l+1).name,'loss')))
             [obj.params(p(1)).learningRate]= 0.01;
             [obj.params(p(2)).learningRate]= 0.2;

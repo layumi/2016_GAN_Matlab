@@ -228,17 +228,18 @@ for t=1:opts.batchSize:numel(subset)
       labBarrier() ;
     end
     %GD
-      if( opts.flag2 && net.vars(net.getVarIndex('top1err')).value/batchSize<0.1)
+      if( opts.flag2 && net.vars(net.getVarIndex('top1err')).value/batchSize<0.2)
           fprintf('updating G\n');
           opts.flag1 = true;
           opts.flag2 = false;
       end
-      if( opts.flag1 && net.vars(net.getVarIndex('top1err')).value/batchSize>0.5)
+      if( opts.flag1 && net.vars(net.getVarIndex('top1err')).value/batchSize>0.6)
           fprintf('updating D\n');
          opts.flag1 = false;
          opts.flag2 = true;
       end
-    state = accumulate_gradients(state, net, opts, batchSize, mmap) ;
+     %}
+    state = accumulate_gradients(state, net, opts, batchSize, mmap,now_batch) ;
   end
 
   % get statistics
@@ -284,7 +285,7 @@ net.reset() ;
 net.move('cpu') ;
 
 % -------------------------------------------------------------------------
-function state = accumulate_gradients(state, net, opts, batchSize, mmap)
+function state = accumulate_gradients(state, net, opts, batchSize, mmap,now_batch)
 % -------------------------------------------------------------------------
 numGpus = numel(opts.gpus) ;
 otherGpus = setdiff(1:numGpus, labindex) ;
@@ -314,8 +315,7 @@ for p=1:numel(net.params)
       state.momentum{p} = opts.momentum * state.momentum{p} ...
         - thisDecay * net.params(p).value ...
         - (1 / batchSize) * net.params(p).der ;
-      %iter_gap = 1+2*state.epoch;   %,10);
-      %fprintf('%f\n',net.vars(net.getVarIndex('top1err')).value/batchSize);
+    
       if( opts.flag1)
           if (net.params(p).name(1)=='D')  %keep D update G
             thisLR=0;
@@ -326,6 +326,7 @@ for p=1:numel(net.params)
             thisLR=0;
           end
       end
+    %}
       net.params(p).value = net.params(p).value + thisLR * state.momentum{p} ;
 
     case 'otherwise'

@@ -144,7 +144,7 @@ classdef DagNN < matlab.mixin.Copyable
     % Process data with the DagNN
     initParams(obj)
     eval(obj, inputs, derOutputs)
-
+    eval_g(obj, inputs, derOutputs)
     % Get information about the DagNN
     varSizes = getVarSizes(obj, inputSizes)
 

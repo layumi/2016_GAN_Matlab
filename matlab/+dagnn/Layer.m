@@ -119,21 +119,23 @@ classdef Layer < handle
       % compute derivatives of inputs and paramerters
       [derInputs, derParams] = obj.backward ...
         (inputs, {net.params(par).value}, derOutputs) ;
-    
-      if(strcmp(class(obj),'dagnn.Concat'))
-      %----------------y{1} is G3
-          %predict_label = net.vars(net.getVarIndex('predict_label')).value;
-          %predict_label = reshape(predict_label,2,[]);
-          %error = gather(predict_label(1,:)> predict_label(2,:));
-          %half = round(numel(error)/2);          
-          %error  = reshape(-single(error(1:half)),1,1,1,[]);
-          derInputs{1} = bsxfun(@times,derInputs{1},-1);
-      end
       
       if ~iscell(derInputs) || numel(derInputs) ~= numel(in)
         error('Invalid derivatives returned by layer "%s".', layer.name);
       end
-
+      %{
+      if(strcmp(class(obj),'dagnn.Feature_Match_Loss'))
+          prediction = net.vars(net.getVarIndex('prediction')).value;
+          [~,index] = max(prediction,[],3);
+          wrong =  index==11;
+          s = size(derInputs{1},3);
+          wrong = repmat(wrong,[1,1,s,1]);
+          der = derInputs{1} .* wrong;
+          %der(der>3) = 3;
+          %der(der<-3) = -3;
+          derInputs{1} = der;
+      end
+      %}
       % accumuate derivatives
       for i = 1:numel(in)
         v = in(i) ;

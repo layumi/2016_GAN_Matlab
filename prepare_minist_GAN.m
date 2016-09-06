@@ -41,11 +41,16 @@ data = cat(3,data1,data2);
 data = reshape(data,28,28,1,[]);
 label = cat(2,label1,label2);
 
-imdb.images.set = [ones(1,60000),3*ones(1,10000)];
+imdb.images.set = [ones(1,60000),2*ones(1,10000)];
 dataMean = mean(data(:,:,:,imdb.images.set == 1), 4);
 imdb.images.data = data;
 imdb.images.label = label;
 imdb.meta.sets = {'train', 'val', 'test'} ;
 imdb.images.data_mean = dataMean;
-
 save('minist_data.mat','imdb','-v7.3');
+
+%only 2
+imdb.images.data = reshape(data(:,:,find(imdb.images.label ==3)),28,28,1,[]);
+imdb.images.set = ones(1,numel(find(imdb.images.label ==3)));
+imdb.images.label = ones(1,numel(find(imdb.images.label ==3)));
+save('minist_data_only2.mat','imdb','-v7.3');
