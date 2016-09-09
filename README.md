@@ -1,9 +1,9 @@
 # Generative Adversarial Nets for Matlab
-only class 2
+only class 2 with GAN
 
 ![](https://github.com/layumi/2016_GAN_Matlab/blob/master/show.png)
 
-class 0-9 with info GAN
+class 0-9 with infoGAN
 
 ![](https://github.com/layumi/2016_GAN_Matlab/blob/master/show2.png)
 
