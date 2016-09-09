@@ -1,12 +1,13 @@
 clear;
 netStruct1 = load('./data/GAN/net-epoch-1.mat');  %after 1 epoch 
-netStruct2 = load('./data/GAN/net-epoch-20.mat');  %after 20 epoch
+netStruct2 = load('./data/GAN/net-epoch-10.mat');  %after 20 epoch
 k = 5 ;
 net1 = dagnn.DagNN.loadobj(netStruct1.net);
 net1.mode = 'test';
 net1.move('gpu');
 net1.conserveMemory = false;
-im = rand(1,1,100,k,'single')-0.5;
+im = rand(100,k,'single')-0.5;
+im = reshape(im,1,1,100,[]);
 net1.eval({'data_rand',gpuArray(im)});
 result1 = gather(net1.vars(net1.getVarIndex(('G3x'))).value);
 
