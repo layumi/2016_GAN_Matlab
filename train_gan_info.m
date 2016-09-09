@@ -43,7 +43,7 @@ code = zeros(10,half);
 for i=1:half
    code(c(i),i)=1; 
 end
-im_rand = randn(64,half,'single'); 
+im_rand = rand(64,half,'single'); 
 im_rand = cat(1,im_rand,code);
 im_rand = reshape(im_rand,1,1,[],half);
 label2 = cat(2,c,c);
