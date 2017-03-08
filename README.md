@@ -33,5 +33,5 @@ So in the minist using conv(fc layer) is better. (deconv may suit for real image
 
 # I have give up this code, you may try the code in tensorflow.
 I am sorry for that. I think my GAN training code on github is not good enough to rehearsal the result in the original paper. In fact, I give up my code and turn to use the dcgan wrote in the tensrflow. The code url is https://github.com/carpedm20/DCGAN-tensorflow. You may try it.
-Recently I also test the code for wgan. https://github.com/carpedm20/DCGAN-tensorflow   It’s also awesome.
+Recently I also test the code for wgan. https://github.com/martinarjovsky/WassersteinGAN  It’s also awesome.
 I hope it can help you.
